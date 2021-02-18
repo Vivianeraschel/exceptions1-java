@@ -44,20 +44,15 @@ public class Program {
 			System.out.print("Check-out date (dd/MM/yyyy): ");
 			checkOut = sdf.parse(sc.next());
 			
-			Date now = new Date();
 			
-			if(checkIn.before(now) || checkOut.before(now)) {
-				
-				System.out.println("Error in reservation: Reservation dates for update must be future dates.");
+			String error = reserv.updateDates(checkIn, checkOut);
+			
+			if(error != null) {
+				System.out.println("Error in reservation: " + error);
 			}
-			else if (!checkOut.after(checkIn)) { //repete igual de cima, a data tem o metodo after que testa se uma data é posterior a outra
-					
-					System.out.println("Error in reservation: checkOut date must be after checkIn date");
-			}
-			else {
-			reserv.updateDates(checkIn, checkOut);
+			else
 			System.out.println("Reservation: " + reserv);
-			}
+			
 		}
 		
 		
