@@ -53,10 +53,11 @@ public class Program {
 			else if (!checkOut.after(checkIn)) { //repete igual de cima, a data tem o metodo after que testa se uma data é posterior a outra
 					
 					System.out.println("Error in reservation: checkOut date must be after checkIn date");
-				}
-			
+			}
+			else {
 			reserv.updateDates(checkIn, checkOut);
 			System.out.println("Reservation: " + reserv);
+			}
 		}
 		
 		
