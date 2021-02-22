@@ -1,8 +1,10 @@
-package mode.entities;
+package model.entities;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
+
+import model.exceptions.DomainException;
 
 public class Reservation {
 	
@@ -16,7 +18,17 @@ public class Reservation {
 	public Reservation() {}
 
 
-	public Reservation(Integer roomNumber, Date checkIn, Date checkOut) {
+	public Reservation(Integer roomNumber, Date checkIn, Date checkOut) throws DomainException {
+		//boa pratica, tratar a exceção no começo dos metodos
+		//já no construtor
+		//PROGRAMAÇÃO DEFENSIVA
+		if (!checkOut.after(checkIn)) { //repete igual de cima, a data tem o metodo after que testa se uma data é posterior a outra
+			//Exceção personalizada
+			//throw new IllegalArgumentException ("CheckOut date must be after checkIn date");
+			throw new DomainException("CheckOut date must be after checkIn date");
+		}	
+		
+		
 		this.roomNumber = roomNumber;
 		this.checkIn = checkIn;
 		this.checkOut = checkOut;
@@ -50,22 +62,28 @@ public class Reservation {
 		return TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS);
 	}
 	
-	public String updateDates(Date checkIn, Date checkOut) {
+	public void updateDates(Date checkIn, Date checkOut) throws DomainException {
 		
 		Date now = new Date();		
 		if(checkIn.before(now) || checkOut.before(now)) {
 			
-			return "Reservation dates for update must be future dates.";
+			//lançar exceção
+			//quem trata é o programa principal pelo TRY CATCH
+			//IllegalArgumentException --> quando os argumentos que vc passa para um metodo, são invalidos
+			//throw new IllegalArgumentException ("Reservation dates for update must be future dates.");
+			
+			//Exceção personalizada
+			throw new DomainException("Reservation dates for update must be future dates.");
 		}
 		
 		if (!checkOut.after(checkIn)) { //repete igual de cima, a data tem o metodo after que testa se uma data é posterior a outra
 				
-				return "CheckOut date must be after checkIn date";
+			//Exceção personalizada
+			//throw new IllegalArgumentException ("CheckOut date must be after checkIn date");
+			throw new DomainException("CheckOut date must be after checkIn date");
 		}
 		this.checkIn = checkIn;
 		this.checkOut = checkOut;
-		
-		return null;
 	}
 	
 	@Override

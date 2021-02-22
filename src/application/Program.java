@@ -5,34 +5,29 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Scanner;
 
-import mode.entities.Reservation;
+import model.entities.Reservation;
+import model.exceptions.DomainException;
 
 public class Program {
 
-	public static void main(String[] args) throws ParseException {//main pode lançar exceção desse tipo, se acontecer, vai ser propagada
+	public static void main(String[] args) {
 		
 		Scanner sc = new Scanner(System.in);
 		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 		
-		System.out.print("Room number: ");
-		int number = sc.nextInt();
-		
-		System.out.print("Check-in date (dd/MM/yyyy): ");
-		Date checkIn = sdf.parse(sc.next()); //pega a string que o usuário digitu e troca (parse) para data
-											//ou trata a exceção com try catch ou propaga com o thows
-		
-		System.out.print("Check-out date (dd/MM/yyyy): ");
-		Date checkOut = sdf.parse(sc.next());
-		
-		//checkOut posterior a checkIn
-		
-		if(!checkOut.after(checkIn)) { //a data tem o metodo after que testa se uma data é posterior a outra
+		try {
+			System.out.print("Room number: ");
+			int number = sc.nextInt();
 			
-			System.out.println("Error in reservation: checkOut date must be after checkIn date");
-		}
-		else {
+			System.out.print("Check-in date (dd/MM/yyyy): ");
+			Date checkIn = sdf.parse(sc.next()); //pega a string que o usuário digitu e troca (parse) para data
+												//ou trata a exceção com try catch ou propaga com o thows
 			
-			Reservation reserv = new Reservation(number, checkIn, checkOut);
+			System.out.print("Check-out date (dd/MM/yyyy): ");
+			Date checkOut = sdf.parse(sc.next());
+			
+					
+			Reservation reserv = new Reservation(number, checkIn, checkOut);//instanciando a reserva
 			System.out.println("Reservation: " + reserv);
 			
 			System.out.println();
@@ -45,20 +40,26 @@ public class Program {
 			checkOut = sdf.parse(sc.next());
 			
 			
-			String error = reserv.updateDates(checkIn, checkOut);
-			
-			if(error != null) {
-				System.out.println("Error in reservation: " + error);
-			}
-			else
+			reserv.updateDates(checkIn, checkOut);
 			System.out.println("Reservation: " + reserv);
 			
 		}
-		
-		
+		catch(ParseException e) { //para tratar os erros de sdf.parse
+			System.out.println("Invalid date format ");
+		}
+		//catch (IllegalArgumentException e) { //que está na classe reservation
+		catch (DomainException e) {
+			System.out.println("Error in reservation " + e.getMessage());
+		}
 		
 		sc.close();
 		
 	}
 
 }
+
+
+
+
+
+
